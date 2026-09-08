@@ -1,0 +1,5 @@
+controller\CartServlet$CartItem.class
+com\mycompany\cart\JakartaRestConfiguration.class
+com\mycompany\cart\resources\JakartaEE10Resource.class
+controller\CartServlet$Product.class
+controller\CartServlet.class
