@@ -1,22 +1,20 @@
-FROM maven:3.9-eclipse-temurin-17 AS build
+FROM maven:3.9-eclipse-temurin-11 AS build
 
 WORKDIR /app
 
 COPY pom.xml .
-
-RUN mvn dependency:go-offline
-
 COPY src ./src
 
 RUN mvn clean package -DskipTests
 
+FROM tomcat:10.1-jdk11-temurin
 
-FROM tomcat:10.1-jdk17-temurin
-
-RUN rm -rf /usr/local/tomcat/webapps/ROOT
+RUN rm -rf /usr/local/tomcat/webapps/*
 
 COPY --from=build /app/target/*.war /usr/local/tomcat/webapps/ROOT.war
 
-EXPOSE 8080
+RUN sed -i 's/port="8080"/port="10000"/' /usr/local/tomcat/conf/server.xml
+
+EXPOSE 10000
 
 CMD ["catalina.sh", "run"]
