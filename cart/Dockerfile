@@ -15,6 +15,8 @@ COPY --from=build /app/target/*.war /usr/local/tomcat/webapps/ROOT.war
 
 RUN sed -i 's/port="8080"/port="10000"/' /usr/local/tomcat/conf/server.xml
 
+RUN sed -i 's/port="8005"/port="-1"/' /usr/local/tomcat/conf/server.xml
+
 EXPOSE 10000
 
 CMD ["catalina.sh", "run"]
