@@ -138,19 +138,14 @@
         <td>
             $<%= String.format("%.2f", item.getAmount()) %>
         </td>
-
         <td>
-
             <a href="cart?action=remove&id=<%= item.product.id %>">
                 <button type="button">
                     Remove Item
                 </button>
             </a>
-
         </td>
-
     </tr>
-
 <%
         }
     }
@@ -178,14 +173,11 @@
     <a href="index.jsp">
         <button>Continue Shopping</button>
     </a>
-
     &nbsp;
-
     <a href="cart?action=checkout">
         <button>Checkout</button>
     </a>
 
 </div>
-
 </body>
 </html>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>CD List</title>
+    <title>MY ONLINE STORE</title>
 
     <style>
         body {
@@ -24,7 +24,7 @@
         }
 
         th {
-            text-align: left;
+            text-align: center;
         }
 
         .price {

@@ -1,12 +1,10 @@
 package controller;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,27 +12,16 @@ import java.util.List;
 @WebServlet("/cart")
 public class CartServlet extends HttpServlet {
 
-    // =========================
-    // Product
-    // =========================
-
     public static class Product {
-
         public String id;
         public String description;
         public double price;
-
         public Product(String id, String description, double price) {
             this.id = id;
             this.description = description;
             this.price = price;
         }
     }
-
-    // =========================
-    // Cart Item
-    // =========================
-
     public static class CartItem {
 
         public Product product;
@@ -49,27 +36,14 @@ public class CartServlet extends HttpServlet {
             return product.price * quantity;
         }
     }
-
-    // =========================
-    // Product list
-    // =========================
-
     private Product getProduct(String id) {
 
         if (id.equals("P1")) {
-            return new Product(
-                    "P1",
-                    "86 (the band) - True Life Songs and Pictures",
-                    14.95
-            );
+            return new Product("P1","86 (the band) - True Life Songs and Pictures",14.95);
         }
 
         if (id.equals("P2")) {
-            return new Product(
-                    "P2",
-                    "Paddlefoot - The first CD",
-                    12.95
-            );
+            return new Product("P2","Paddlefoot - The first CD",12.95);
         }
 
         if (id.equals("P3")) {
@@ -81,19 +55,11 @@ public class CartServlet extends HttpServlet {
         }
 
         if (id.equals("P4")) {
-            return new Product(
-                    "P4",
-                    "Joe Rut - Genuine Wood Grained Finish",
-                    14.95
-            );
+            return new Product("P4","Joe Rut - Genuine Wood Grained Finish",14.95);
         }
 
         return null;
     }
-
-    // =========================
-    // Main
-    // =========================
 
     @Override
     protected void doGet(
@@ -110,27 +76,19 @@ public class CartServlet extends HttpServlet {
         else if (action.equals("add")) {
             addToCart(request, response);
         }
-
         else if (action.equals("update")) {
             updateCart(request, response);
         }
-
         else if (action.equals("remove")) {
             removeFromCart(request, response);
         }
-
         else if (action.equals("checkout")) {
             checkout(request, response);
         }
-
         else {
             showCart(request, response);
         }
     }
-
-    // =========================
-    // ADD
-    // =========================
 
     private void addToCart(
             HttpServletRequest request,
@@ -138,11 +96,8 @@ public class CartServlet extends HttpServlet {
             throws IOException {
 
         String id = request.getParameter("id");
-
         Cookie[] cookies = request.getCookies();
-
         int quantity = 0;
-
         if (cookies != null) {
 
             for (Cookie cookie : cookies) {
@@ -155,22 +110,12 @@ public class CartServlet extends HttpServlet {
         }
 
         quantity++;
-
-        Cookie cookie =
-                new Cookie("cart_" + id, String.valueOf(quantity));
-
+        Cookie cookie =new Cookie("cart_" + id, String.valueOf(quantity));
         cookie.setMaxAge(60 * 60 * 24 * 7);
-
         cookie.setPath("/");
-
         response.addCookie(cookie);
-
         response.sendRedirect("cart");
     }
-
-    // =========================
-    // SHOW CART
-    // =========================
 
     private void showCart(
             HttpServletRequest request,
@@ -178,16 +123,10 @@ public class CartServlet extends HttpServlet {
             throws ServletException, IOException {
 
         List<CartItem> cartItems = getCartItems(request);
-
         request.setAttribute("cartItems", cartItems);
-
-        request.getRequestDispatcher("cart.jsp")
-                .forward(request, response);
+        request.getRequestDispatcher("cart.jsp").forward(request, response);
     }
 
-    // =========================
-    // GET CART FROM COOKIES
-    // =========================
 
     private List<CartItem> getCartItems(
             HttpServletRequest request) {
@@ -208,15 +147,12 @@ public class CartServlet extends HttpServlet {
 
                 String id = name.substring(5);
 
-                int quantity =
-                        Integer.parseInt(cookie.getValue());
+                int quantity =Integer.parseInt(cookie.getValue());
 
                 Product product = getProduct(id);
 
                 if (product != null && quantity > 0) {
-
-                    cartItems.add(
-                            new CartItem(product, quantity)
+                    cartItems.add(new CartItem(product, quantity)
                     );
                 }
             }
@@ -224,18 +160,11 @@ public class CartServlet extends HttpServlet {
 
         return cartItems;
     }
-
-    // =========================
-    // UPDATE
-    // =========================
-
     private void updateCart(
             HttpServletRequest request,
             HttpServletResponse response)
             throws IOException {
-
         String id = request.getParameter("id");
-
         String quantityString =
                 request.getParameter("quantity");
 
@@ -249,17 +178,10 @@ public class CartServlet extends HttpServlet {
                 );
 
         cookie.setMaxAge(60 * 60 * 24 * 7);
-
         cookie.setPath("/");
-
         response.addCookie(cookie);
-
         response.sendRedirect("cart");
     }
-
-    // =========================
-    // REMOVE
-    // =========================
 
     private void removeFromCart(
             HttpServletRequest request,
@@ -280,28 +202,19 @@ public class CartServlet extends HttpServlet {
         response.sendRedirect("cart");
     }
 
-    // =========================
-    // CHECKOUT
-    // =========================
-
     private void checkout(
             HttpServletRequest request,
             HttpServletResponse response)
             throws ServletException, IOException {
 
         List<CartItem> cartItems = getCartItems(request);
-
         double total = 0;
-
         for (CartItem item : cartItems) {
             total += item.getAmount();
         }
 
         request.setAttribute("cartItems", cartItems);
-
         request.setAttribute("total", total);
-
-        request.getRequestDispatcher("checkout.jsp")
-                .forward(request, response);
+        request.getRequestDispatcher("checkout.jsp").forward(request, response);
     }
 }
